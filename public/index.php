@@ -6,16 +6,7 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
   </head>
   <body>
-
-  <?php
-    require '../Application/autoload.php';
-
-    use Application\core\App;
-    use Application\core\Controller;
-
-    $app = new App();
-
-  ?>
+    <h1>Bem Vindo !!!</h1>
   <script src="/assets/js/jquery.slim.min.js"></script>
   <script src="/assets/js/bootstrap.min.js"></script>
   </body>

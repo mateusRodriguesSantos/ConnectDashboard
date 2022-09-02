@@ -1,0 +1,15 @@
+{
+    "name": "connect-dashboard/handle-connection",
+    "autoload": {
+        "psr-4": {
+            "ConnectDashboard\\App\\": "controllers/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mateus Rodrigues",
+            "email": "mateus.rteu@gmail.com"
+        }
+    ],
+    "require": {}
+}
