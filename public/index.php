@@ -6,7 +6,14 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
   </head>
   <body>
-    <h1>Bem Vindo !!!</h1>
+    <?php  
+
+      require_once("../vendor/autoload.php"); 
+
+      use App\controllers\TesteController;
+
+      $controller = new TesteController();
+    ?>
   <script src="/assets/js/jquery.slim.min.js"></script>
   <script src="/assets/js/bootstrap.min.js"></script>
   </body>

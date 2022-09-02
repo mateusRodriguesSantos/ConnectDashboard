@@ -2,7 +2,7 @@
     "name": "connect-dashboard/handle-connection",
     "autoload": {
         "psr-4": {
-            "ConnectDashboard\\App\\": "controllers/"
+            "App\\": "App/"
         }
     },
     "authors": [
