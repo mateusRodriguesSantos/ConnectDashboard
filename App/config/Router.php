@@ -1,5 +1,6 @@
 <?php
 
-define('BASE', '/ConnectDashboard/');
-
+    $this->get('/home', function() {
+        echo "Estou na home";
+    });
 ?>
