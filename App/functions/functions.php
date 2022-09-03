@@ -4,6 +4,6 @@
             print_r($params);
         echo "</pre>";
 
-        if($die) die();
+        // if($die) die();
     }
 ?>

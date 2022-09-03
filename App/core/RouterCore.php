@@ -13,7 +13,7 @@
         }
 
         private function initialize() {
-            $this->$method = $_SERVER["REQUEST_METHOD"];
+            $this->method = $_SERVER["REQUEST_METHOD"];
             $uri = $_SERVER["REQUEST_URI"];
 
             $ex = explode("/", $uri);
@@ -23,9 +23,9 @@
                 unset($uri[$i]);
             }
 
-            $this->$uri = implode('/', $this->normalizeURI($uri));
-            if (DEBUG_URI){
-                $this->dd($this->$uri); 
+            $this->uri = implode("/", $uri);
+            if (DEBUG_URI) {
+                $this->dd($this->uri);
             }
         }
 
@@ -42,11 +42,13 @@
 
         private function executeGET() {
             foreach($this->get_array as $get) {
-                $r = $get['router'];
-                echo $r.'- '.$this.$uri.'</br>';
+               $r = substr($get['router'], 1);
 
-                if($get['router'] == $this->$uri){
-                    echo 'achamos !!';
+                if($r == $this->uri){
+                    if(is_callable($get['call'])) {
+                        $get['call']();
+                        break;
+                    }
                 }
             }
         }
@@ -71,7 +73,7 @@
                 print_r($params);
             echo "</pre>";
     
-            if($die) die();
+            // if($die) die();
         }
     }
 
