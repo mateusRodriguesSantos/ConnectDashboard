@@ -1,8 +1,8 @@
 <?php
 
-namespace app\controller;
+namespace App\controllers;
 
-use app\core\Controller;
+use App\core\Controller;
 
 class MessageController extends Controller
 {

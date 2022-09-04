@@ -11,6 +11,7 @@ class RouterCore
 
     public function __construct()
     {
+     
         $this->initialize();
         require_once('../app/config/Router.php');
         $this->execute();
@@ -109,19 +110,19 @@ class RouterCore
     {
         $ex = explode('@', $get);
         if (!isset($ex[0]) || !isset($ex[1])) {
-            (new \app\controller\MessageController)->message('Dados inválidos', 'Controller ou método não encontrado: ' . $get, 404);
+            (new \App\controllers\MessageController)->message('Dados inválidos', 'Controller ou método não encontrado: ' . $get, 404);
             return;
         }
 
-        $cont = 'app\\controller\\' . $ex[0];
+        $cont = 'App\\controllers\\' . $ex[0];
         if (!class_exists($cont)) {
-            (new \app\controller\MessageController)->message('Dados inválidos', 'Controller não encontrada: ' . $get, 404);
+            (new \App\controllers\MessageController)->message('Dados inválidos', 'Controller não encontrada: ' . $get, 404);
             return;
         }
 
 
         if (!method_exists($cont, $ex[1])) {
-            (new \app\controller\MessageController)->message('Dados inválidos', 'Método não encontrado: ' . $get, 404);
+            (new \App\controllers\MessageController)->message('Dados inválidos', 'Método não encontrado: ' . $get, 404);
             return;
         }
 

@@ -1,6 +1,5 @@
 <?php
 
-    $this->get('/home', function() {
-        echo "Estou na home";
-    });
+    $this->get('/', 'PagesController@home');
+
 ?>
