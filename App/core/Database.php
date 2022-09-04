@@ -1,66 +1,210 @@
 <?php
 
-namespace Application\core;
+namespace app\Core;
 
 use PDO;
-class Database extends PDO
+
+/**
+ * PDO PHP Persistence Class
+ * https://github.com/victortassinari/pdophpclass
+ *
+ *
+ * @author Victor Tassinari - victortassinarix@gmail.com
+ */
+class Database
 {
-  // configuração do banco de dados
-  private $DB_NAME = 'mvc_db';
-  private $DB_USER = 'postgres';
-  private $DB_PASSWORD = 'postgres';
-  private $DB_HOST = 'localhost';
-  private $DB_PORT = 5432;
 
-  // armazena a conexão
-  private $conn;
+    private static $connection;
 
-  public function __construct()
-  {
-    // Quando essa classe é instanciada, é atribuido a variável $conn a conexão com o db
-    $this->conn = new PDO("pgsql:dbname=$this->DB_NAME;host=$this->DB_HOST;port=$this->DB_PORT;user=$this->DB_USER;password=$this->DB_PASSWORD");
-  }
+    private $debug;
+    private $server;
+    private $user;
+    private $password;
+    private $database;
 
-  /**
-  * Este método recebe um objeto com a query 'preparada' e atribui as chaves da query
-  * seus respectivos valores.
-  * @param  PDOStatement  $stmt   Contém a query ja 'preparada'.
-  * @param  string        $key    É a mesma chave informada na query.
-  * @param  string        $value  Valor de uma determinada chave.
-  */
-  private function setParameters($stmt, $key, $value)
-  {
-    $stmt->bindParam($key, $value);
-  }
+    public function __construct()
+    {
 
-  /**
-  * A responsabilidade deste método é apenas percorrer o array de com os parâmetros
-  * obtendo as chaves e os valores para fornecer tais dados para setParameters().
-  * @param  PDOStatement  $stmt         Contém a query ja 'preparada'.
-  * @param  array         $parameters   Array associativo contendo chave e valores para fornece a query
-  */
-  private function mountQuery($stmt, $parameters)
-  {
-    foreach( $parameters as $key => $value ) {
-      $this->setParameters($stmt, $key, $value);
+        $this->debug = true;
+
+        $this->server   =  DB_HOST;
+        $this->user     =  DB_USER;
+        $this->password =  DB_PASS;
+        $this->database =  DB_NAME;
     }
-  }
 
-  /**
-  * Este método é responsável por receber a query e os parametros, preparar a query
-  * para receber os valores dos parametros informados, chamar o método mountQuery,
-  * executar a query e retornar para os métodos tratarem o resultado.
-  * @param  string   $query       Instrução SQL que será executada no banco de dados.
-  * @param  array    $parameters  Array associativo contendo as chaves informada na query e seus respectivos valores
-  *
-  * @return PDOStatement
-  */
-  public function executeQuery(string $query, array $parameters = [])
-  {
-    $stmt = $this->conn->prepare($query);
-    $this->mountQuery($stmt, $parameters);
-    $stmt->execute();
-    return $stmt;
-  }
+    /**
+     * Create a database connection or return the connection already open using Singletion Design Patern
+     * @return PDOConnection|null
+     */
+    public function getConnection()
+    {
+        try {
+            if (self::$connection == null) {
+                self::$connection = new PDO("mysql:host={$this->server};dbname={$this->database};charset=utf8", $this->user, $this->password);
+                self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                self::$connection->setAttribute(PDO::ATTR_PERSISTENT, true);
+            }
 
+            return self::$connection;
+        } catch (\PDOException $ex) {
+            if ($this->debug)
+                echo "<b>Error on getConnection(): </b>" . $ex->getMessage() . "<br/>";
+
+            return null;
+        }
+    }
+
+    /**
+     * Unset connection
+     * @return void
+     */
+    public function disconnect()
+    {
+        self::$connection = null;
+    }
+
+    /**
+     * Return the last id of insert statement
+     * @return int
+     */
+    public function getLastID()
+    {
+        return $this->getConnection()->lastInsertId();
+    }
+
+    /**
+     * Start one database transaction
+     * @return void
+     */
+    public function beginTransaction()
+    {
+        return $this->getConnection()->beginTransaction();
+    }
+
+    /**
+     * Commit changes on opened transaction
+     * @return void
+     */
+    public function commit()
+    {
+        return $this->getConnection()->commit();
+    }
+
+    /**
+     * Roolback changes on opened transaction
+     * @return void
+     */
+    public function rollback()
+    {
+        return $this->getConnection()->rollBack();
+    }
+
+    /**
+     * returns the result of a query (select) of only one row
+     * @param string $sql the sql string
+     * @param array $params the array of parameters (array(":col1" => "val1",":col2" => "val2"))
+     * @return one position array for the result of query
+     */
+    public function executeQueryOneRow($sql, $params = null)
+    {
+        try {
+
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        } catch (\PDOException $ex) {
+            if ($this->debug) {
+                echo "<b>Error on ExecuteQueryOneRow():</b> " . $ex->getMessage() . "<br />";
+                echo "<br /><b>SQL: </b>" . $sql . "<br />";
+
+                echo "<br /><b>Parameters: </b>";
+                print_r($params) . "<br />";
+            }
+            return null;
+        }
+    }
+
+    /**
+     * returns the result of a query (select)
+     * @param string $sql the sql string
+     * @param array $params the array of parameters (array(":col1" => "val1",":col2" => "val2"))
+     * @return array for the result of query
+     */
+    public function executeQuery($sql, $params = null)
+    {
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+
+            $stmt->execute($params);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $ex) {
+            if ($this->debug) {
+                echo "<b>Error on ExecuteQuery():</b> " . $ex->getMessage() . "<br />";
+                echo "<br /><b>SQL: </b>" . $sql . "<br />";
+
+                echo "<br /><b>Parameters: </b>";
+                print_r($params) . "<br />";
+            }
+            return null;
+        }
+    }
+
+    /**
+     * returns if the query was successful
+     * @param string $sql the sql string
+     * @param array $params the array of parameters (array(":col1" => "val1",":col2" => "val2"))
+     * @return boolean
+     */
+    public function executeNonQuery($sql, $params = null)
+    {
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            return $stmt->execute($params);
+
+        } catch (\PDOException $ex) {
+            if ($this->debug) {
+                echo "<b>Error on ExecuteNonQuery():</b> " . $ex->getMessage() . "<br />";
+                echo "<br /><b>SQL: </b>" . $sql . "<br />";
+
+                echo "<br /><b>Parameters: </b>";
+                print_r($params) . "<br />";
+            }
+
+            return false;
+        }
+    }
+
+    /**
+     * returns number of rows affected
+     * @param string $sql the sql string
+     * @param array $params the array of parameters (array(":col1" => "val1",":col2" => "val2"))
+     * @return int
+     */
+    public function NumberRows($sql, $params = null)
+    {
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->execute($params);
+
+            return $stmt->rowCount();
+        } catch (\PDOException $ex) {
+            if ($this->debug) {
+                echo "<b>Error on ExecuteNonQuery():</b> " . $ex->getMessage() . "<br />";
+                echo "<br /><b>SQL: </b>" . $sql . "<br />";
+
+                echo "<br /><b>Parameters: </b>";
+            }
+
+            return -1;
+        }
+    }
+
+    public function getDebugState()
+    {
+        return $this->debug;
+    }
 }
