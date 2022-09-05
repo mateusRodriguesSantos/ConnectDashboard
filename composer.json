@@ -1,0 +1,17 @@
+{
+    "name": "connect-dashboard/handle-connection",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mateus Rodrigues",
+            "email": "mateus.rteu@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.0"
+    }
+}

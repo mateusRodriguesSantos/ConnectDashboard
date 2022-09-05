@@ -1,5 +1,12 @@
-# Created by https://www.toptal.com/developers/gitignore/api/windows,macos
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos
+# ------- COMPOSER ----------
+
+/vendor/
+composer.lock
+
+# ------- OPERACIONAL SYSTEMNS ----------
+
+# Created by https://www.toptal.com/developers/gitignore/api/macos,windows
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows
 
 ### macOS ###
 # General
@@ -60,4 +67,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos
+=======
+# End of https://www.toptal.com/developers/gitignore/api/macos,windows
+>>>>>>> main
