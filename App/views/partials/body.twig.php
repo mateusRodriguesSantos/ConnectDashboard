@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    {% include 'partials/header.twig.php' %}
+    {% block navBarData %}{% endblock %}
 
     {% block body %}{% endblock %}
 </body>

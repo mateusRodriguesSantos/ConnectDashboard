@@ -75,13 +75,17 @@ class RouterCore
             if (substr($r, -1) == '/') {
                 $r = substr($r, 0, -1);
             }
+
             if ($r == $this->uri) {
                 if (is_callable($get['call'])) {
                     $get['call']();
-                    break;
-                } else {
-                    $this->executeController($get['call']);
+                    return;
                 }
+
+                $this->executeController($get['call']);
+            } else { 
+                (new \App\controllers\MessageController)->message(404);
+                return;
             }
         }
     }
@@ -100,8 +104,10 @@ class RouterCore
                     $get['call']();
                     return;
                 }
-
                 $this->executeController($get['call']);
+            } else { 
+                (new \App\controllers\MessageController)->message(404);
+                return;
             }
         }
     }
@@ -110,19 +116,20 @@ class RouterCore
     {
         $ex = explode('@', $get);
         if (!isset($ex[0]) || !isset($ex[1])) {
-            (new \App\controllers\MessageController)->message('Dados inválidos', 'Controller ou método não encontrado: ' . $get, 404);
+            echo "Achou o @";
+            (new \App\controllers\MessageController)->message(404);
             return;
         }
 
         $cont = 'App\\controllers\\' . $ex[0];
         if (!class_exists($cont)) {
-            (new \App\controllers\MessageController)->message('Dados inválidos', 'Controller não encontrada: ' . $get, 404);
+            (new \App\controllers\MessageController)->message(404);
             return;
         }
 
 
         if (!method_exists($cont, $ex[1])) {
-            (new \App\controllers\MessageController)->message('Dados inválidos', 'Método não encontrado: ' . $get, 404);
+            (new \App\controllers\MessageController)->message(404);
             return;
         }
 

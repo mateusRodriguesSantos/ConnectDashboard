@@ -6,12 +6,9 @@ use App\core\Controller;
 
 class MessageController extends Controller
 {
-    public function message(string $title, string $message, $code = 404)
+    public function message($code = 404)
     {
         http_response_code($code);
-        $this->load('message/main', [
-            'title' => $title,
-            'message' => $message,
-        ]);
+        $this->load('errorView/main');
     }
 }
