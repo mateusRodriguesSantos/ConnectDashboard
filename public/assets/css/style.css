@@ -1,0 +1,60 @@
+html {
+    height: 100%;
+}
+
+
+body {
+    height: 100%;
+}
+
+
+#principal {
+    height: 100%;
+}
+
+#navBar {
+    background-color: #E1E2E1;
+}
+
+.nav-user {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.meu-perfil {
+    text-align: center;
+}
+
+.image {
+    background-color: black;
+    width: 64px;
+    height: 64px;
+    border-radius: 40px;
+}
+
+.nav-link {
+    color: white;
+}
+
+#navButton {
+    border-color: gray;
+    background-color: gray;
+    border-radius: 0;
+    margin-top: 20px;
+}
+
+#navButton-first {
+    border-color: gray;
+    background-color: gray;
+    margin-top: 50px;
+    border-radius: 0;
+}
+
+#navButton-last {
+    border-color: black;
+    background-color: black;
+    border-radius: 0;
+    margin-top: calc(100% - -20px);
+}
