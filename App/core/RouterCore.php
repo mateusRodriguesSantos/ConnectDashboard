@@ -8,6 +8,7 @@ class RouterCore
     private $uri;
     private $method;
     private $getArr = [];
+    private $isExecute404 = false;
 
     public function __construct()
     {
@@ -15,6 +16,16 @@ class RouterCore
         $this->initialize();
         require_once('../app/config/Router.php');
         $this->execute();
+        $this->checkStatusError();
+    }
+
+    private function checkStatusError() {
+        if($this->isExecute404) {
+            (new \App\controllers\MessageController)->message(404);
+            return;
+        } else {
+            $this->isExecute404 = false;
+        }
     }
 
     private function initialize()
@@ -75,13 +86,18 @@ class RouterCore
             if (substr($r, -1) == '/') {
                 $r = substr($r, 0, -1);
             }
-  
+          
             if ($r == $this->uri) {
+                $this->isExecute404 = false;
+                
                 if (is_callable($get['call'])) {
                     $get['call']();
                     return;
                 }
                 $this->executeController($get['call']);
+                return;
+            } else {
+                $this->isExecute404 = true;
             }
         }
     }
@@ -101,9 +117,8 @@ class RouterCore
                     return;
                 }
                 $this->executeController($get['call']);
-            } else { 
-                (new \App\controllers\MessageController)->message(404);
-                return;
+            } else {
+                $this->isExecute404 = true;
             }
         }
     }
