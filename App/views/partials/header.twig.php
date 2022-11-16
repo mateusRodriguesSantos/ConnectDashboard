@@ -13,7 +13,7 @@
     <a class="nav-link active" href="#">Discipulador</a>
   </li>
   <li class="nav-item btn btn-primary" id="navButton">
-    <a class="nav-link" href="#">Ovelha</a>
+    <a class="nav-link" href="Ovelha">Ovelha</a>
   </li>
   <li class="nav-item btn btn-primary" id="navButton">
     <a class="nav-link" href="#">Reconnect</a>

@@ -10,5 +10,10 @@ class PagesController extends Controller
     {
         $this->load('home/main');
     }
+
+    public function ovelha()
+    {
+        $this->load('membro/ovelha');
+    }
 }
 

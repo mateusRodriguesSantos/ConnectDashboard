@@ -71,21 +71,17 @@ class RouterCore
     {
         foreach ($this->getArr as $get) {
             $r = substr($get['router'], 1);
-
+      
             if (substr($r, -1) == '/') {
                 $r = substr($r, 0, -1);
             }
-
+  
             if ($r == $this->uri) {
                 if (is_callable($get['call'])) {
                     $get['call']();
                     return;
                 }
-
                 $this->executeController($get['call']);
-            } else { 
-                (new \App\controllers\MessageController)->message(404);
-                return;
             }
         }
     }
@@ -116,7 +112,6 @@ class RouterCore
     {
         $ex = explode('@', $get);
         if (!isset($ex[0]) || !isset($ex[1])) {
-            echo "Achou o @";
             (new \App\controllers\MessageController)->message(404);
             return;
         }
@@ -133,6 +128,12 @@ class RouterCore
             return;
         }
 
+        if (DEBUG_URI) {
+            dd($this->uri);
+            dd($cont);
+            dd($ex);
+        }
+      
         call_user_func_array([
             new $cont,
             $ex[1]
